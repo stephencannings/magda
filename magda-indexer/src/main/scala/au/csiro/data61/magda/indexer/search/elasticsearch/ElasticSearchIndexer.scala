@@ -230,7 +230,8 @@ class ElasticSearchIndexer(
         }
     })
 
-  private def buildIndex(client: TcpClient, definition: IndexDefinition): Future[Any] = {
+  private def doBuildIndex(client: TcpClient, definition: IndexDefinition): Future[Any] = {
+
     val snapshotFuture = if (config.getBoolean("indexer.readSnapshots"))
       restoreLatestSnapshot(client, definition)
     else {
@@ -239,26 +240,42 @@ class ElasticSearchIndexer(
     }
 
     snapshotFuture flatMap {
-      case RestoreSuccess => Future.successful(Unit) // no need to reindex 
+      case RestoreSuccess => Future.successful(Unit) // no need to reindex
       case RestoreFailure =>
         deleteIndex(client, definition)
           .flatMap { _ =>
             client.execute(definition.definition(indices, config))
           } recover {
-            case e: Throwable =>
-              logger.error(e, "Failed to set up the index")
-              throw e
-          } flatMap { _ =>
-            logger.info("Index {} version {} created", definition.name, definition.version)
+          case e: Throwable =>
+            logger.error(e, "Failed to set up the index")
+            throw e
+        } flatMap { _ =>
+          logger.info("Index {} version {} created", definition.name, definition.version)
 
-            definition.create match {
-              case Some(createFunc) => createFunc(client, indices, config)(materializer, system)
-                .flatMap(_ => {
-                  createSnapshot(client, definition)
-                })
-              case None => Future(Unit)
-            }
+          definition.create match {
+            case Some(createFunc) => createFunc(client, indices, config)(materializer, system)
+              .flatMap(_ => {
+                createSnapshot(client, definition)
+              })
+            case None => Future(Unit)
           }
+        }
+    }
+
+  }
+
+  private var buildIndexFuture: Option[Future[Any]] = None
+  private var buildIndexAttempts: Int = 0
+
+  private def buildIndex(client: TcpClient, definition: IndexDefinition): Future[Any] = {
+    buildIndexAttempts = buildIndexAttempts + 1
+    println(buildIndexAttempts)
+
+    if(!buildIndexFuture.getOrElse(Future.successful(Unit)).isCompleted) buildIndexFuture.get
+    else {
+     val f = doBuildIndex(client, definition)
+      buildIndexFuture.map(x => f)
+      f
     }
   }
 

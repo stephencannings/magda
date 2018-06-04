@@ -40,7 +40,7 @@ object ClassloaderLocalNodeProvider {
 
     if(!Files.exists(analysisFolderPath)) Files.createDirectories(analysisFolderPath)
 
-    copy (cwdPath.resolve("magda-elastic-search/wn_s.pl"), analysisFolderPath.resolve("wn_s.pl"), REPLACE_EXISTING)
+    copy (cwdPath.resolve("magda-elastic-search/test.pl"), analysisFolderPath.resolve("wn_s.pl"), REPLACE_EXISTING)
 
     val settings = requiredSettings ++ Map(
       "bootstrap.memory_lock" -> "true",
