@@ -51,6 +51,7 @@ import au.csiro.data61.magda.test.util.Generators
 import scala.reflect.internal.util.Statistics.View
 import au.csiro.data61.magda.search.SearchStrategy
 
+@au.csiro.data61.magda.test.tags.RequireElasticSearch
 class FacetSpec extends BaseSearchApiSpec {
 
   describe("facets") {

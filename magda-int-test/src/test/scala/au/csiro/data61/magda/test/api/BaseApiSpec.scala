@@ -18,6 +18,7 @@ import org.scalacheck.Shrink
 import org.scalatest.BeforeAndAfter
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.FunSpec
+import org.scalatest.FunSpecLike
 import org.scalatest.Matchers
 
 import com.sksamuel.elastic4s.ElasticDsl
@@ -53,36 +54,14 @@ import org.elasticsearch.common.settings.Settings
 import au.csiro.data61.magda.test.util.MagdaElasticSugar
 import org.scalatest.BeforeAndAfterEach
 
-trait BaseApiSpec extends FunSpec with Matchers with ScalatestRouteTest with MagdaElasticSugar with BeforeAndAfterEach with BeforeAndAfterAll with MagdaGeneratorTest {
-  implicit def default(implicit system: ActorSystem) = RouteTestTimeout(300 seconds)
+trait BaseApiSpec extends FunSpecLike with Matchers with ScalatestRouteTest with MagdaElasticSugar with MagdaGeneratorTest with BeforeAndAfterEach{
+  implicit def default(implicit system: ActorSystem) = RouteTestTimeout(30 seconds)
   def buildConfig = TestActorSystem.config
   implicit val config = buildConfig
   override def createActorSystem(): ActorSystem = TestActorSystem.actorSystem
-  val logger = Logging(system, getClass)
+  lazy val logger = Logging(system, getClass)
+  println("create logger......");
   implicit val indexedRegions = BaseApiSpec.indexedRegions
-
-  override def beforeAll() {
-    if (!doesIndexExists(DefaultIndices.getIndex(config, Indices.RegionsIndex))) {
-
-      client.execute(
-        IndexDefinition.regions.definition(DefaultIndices, config)
-      ).await(90 seconds)
-
-      val fakeRegionLoader = new RegionLoader {
-        override def setupRegions(): Source[(RegionSource, JsObject), _] = Source.fromIterator(() => BaseApiSpec.indexedRegions.toIterator)
-      }
-
-      logger.info("Setting up regions")
-      IndexDefinition.setupRegions(client, fakeRegionLoader, DefaultIndices).await(60 seconds)
-      logger.info("Finished setting up regions")
-    }
-
-    System.gc()
-  }
-
-  override def afterAll() {
-    System.gc()
-  }
 
   implicit object MockClientProvider extends ClientProvider {
     override def getClient(implicit scheduler: Scheduler, logger: LoggingAdapter, ec: ExecutionContext): Future[TcpClient] = Future(client)

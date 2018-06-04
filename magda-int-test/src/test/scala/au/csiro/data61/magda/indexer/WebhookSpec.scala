@@ -38,6 +38,7 @@ import akka.stream.scaladsl.Source
 import scala.concurrent.Await
 import au.csiro.data61.magda.model.Registry.RegistryConverters
 
+@au.csiro.data61.magda.test.tags.RequireElasticSearch
 class WebhookSpec extends BaseApiSpec with RegistryConverters with ModelProtocols with ApiProtocols {
   override def buildConfig = ConfigFactory.parseString("indexer.requestThrottleMs=1").withFallback(super.buildConfig)
   val cachedListCache: scala.collection.mutable.Map[String, List[_]] = scala.collection.mutable.HashMap.empty

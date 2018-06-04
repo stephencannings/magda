@@ -1,6 +1,7 @@
 package au.csiro.data61.magda.api
 
 import java.net.URL
+
 import org.scalacheck.Arbitrary._
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentLinkedQueue
@@ -8,12 +9,9 @@ import java.util.function.Consumer
 
 import scala.concurrent.Future
 import scala.concurrent.duration.DurationInt
-
 import org.scalacheck.Gen
 import org.scalacheck.Shrink
-
 import com.sksamuel.elastic4s.ElasticDsl
-
 import akka.http.scaladsl.server.Route
 import akka.stream.scaladsl.Source
 import au.csiro.data61.magda.api.model.Protocols
@@ -25,10 +23,12 @@ import au.csiro.data61.magda.test.api.BaseApiSpec
 import au.csiro.data61.magda.test.util.ApiGenerators.textQueryGen
 import au.csiro.data61.magda.test.util.Generators
 import com.sksamuel.elastic4s.Indexes
+
 import scala.collection.mutable
 import au.csiro.data61.magda.model.Registry.RegistryConverters
+import org.scalatest.BeforeAndAfter
 
-trait BaseSearchApiSpec extends BaseApiSpec with RegistryConverters with Protocols   {
+trait BaseSearchApiSpec extends BaseApiSpec with RegistryConverters with Protocols with BeforeAndAfter   {
   val INSERTION_WAIT_TIME = 500 seconds
 
   val cleanUpQueue = new ConcurrentLinkedQueue[String]()

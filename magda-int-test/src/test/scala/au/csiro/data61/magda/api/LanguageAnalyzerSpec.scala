@@ -16,6 +16,7 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer
 import au.csiro.data61.magda.test.util.Generators
 import au.csiro.data61.magda.util.Regex._
 
+@au.csiro.data61.magda.test.tags.RequireElasticSearch
 class LanguageAnalyzerSpec extends BaseSearchApiSpec {
 
   describe("should return the right dataset when searching for that dataset's") {

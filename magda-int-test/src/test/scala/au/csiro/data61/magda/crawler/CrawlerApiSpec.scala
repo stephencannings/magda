@@ -28,6 +28,7 @@ import au.csiro.data61.magda.client.RegistryExternalInterface
 import au.csiro.data61.magda.indexer.crawler.RegistryCrawler
 import au.csiro.data61.magda.client.HttpFetcher
 
+@au.csiro.data61.magda.test.tags.RequireElasticSearch
 class CrawlerApiSpec extends BaseApiSpec with Protocols {
 
   override def buildConfig = ConfigFactory.parseString("indexer.requestThrottleMs=1").withFallback(super.buildConfig)

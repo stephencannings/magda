@@ -51,9 +51,12 @@ import au.csiro.data61.magda.test.util.ApiGenerators
 import au.csiro.data61.magda.model.Registry.RegistryConverters
 import au.csiro.data61.magda.search.elasticsearch.Indices
 
+@au.csiro.data61.magda.test.tags.RequireElasticSearch
 class DataSetSearchSpec extends BaseSearchApiSpec with RegistryConverters {
   describe("meta") {
+    println("First Test case")
     it("Mwundo <--> JTS conversions should work") {
+      println("First 1.1 Test case")
       val geoFactory = new GeometryFactory()
       forAll(regionGen(geometryGen(5, coordGen()))) { regionRaw =>
         val preConversion = regionRaw._2.fields("geometry").convertTo[Geometry]
@@ -69,6 +72,7 @@ class DataSetSearchSpec extends BaseSearchApiSpec with RegistryConverters {
   describe("searching") {
     describe("*") {
       it("should return all results") {
+        println("First 1.2 Test case")
         forAll(indexGen) {
           case (indexName, dataSets, routes) ⇒
             Get(s"/v0/datasets?query=*&limit=${dataSets.length}") ~> routes ~> check {
