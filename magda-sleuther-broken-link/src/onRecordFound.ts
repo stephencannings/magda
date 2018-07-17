@@ -266,6 +266,36 @@ function retrieveHttp(
                         response.statusCode === 429
                     ) {
                         resolve(response.statusCode);
+                    } else if (response.statusCode === 405) {
+                        request.get(
+                            {
+                                url,
+                                headers: {
+                                    Range: "bytes=0-50"
+                                }
+                            },
+                            (err: Error, response: http.IncomingMessage) => {
+                                if (err) {
+                                    reject(err);
+                                } else {
+                                    if (
+                                        (response.statusCode >= 200 &&
+                                            response.statusCode <= 299) ||
+                                        response.statusCode === 429
+                                    ) {
+                                        resolve(response.statusCode);
+                                    } else {
+                                        reject(
+                                            new BadHttpResponseError(
+                                                response.statusMessage,
+                                                response,
+                                                response.statusCode
+                                            )
+                                        );
+                                    }
+                                }
+                            }
+                        );
                     } else {
                         reject(
                             new BadHttpResponseError(
