@@ -1,9 +1,11 @@
 ## 0.0.45
 
+-   Updated header logo to be correct branding type
+-   Uses the Header component from Design System
+
 ## 0.0.44
 
 -   Added more analytics events for Downloads/Views by Organisation, Search result click and Dataset request/feedback
--   Updated header logo to be correct branding type
 -   Removed `button` element for distribution download link on dataset page.
 -   Updated documentation for setting up `Docker Edge` for Kubernetes.
 -   Modified error message text and omitted homepage articles if search error occurs.
