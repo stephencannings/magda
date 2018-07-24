@@ -1,5 +1,7 @@
 ## 0.0.45
 
+-   Added more details in organisations/publishers page to reflect design.
+
 ## 0.0.44
 
 -   Added more analytics events for Downloads/Views by Organisation, Search result click and Dataset request/feedback
@@ -51,7 +53,7 @@
 -   Fixed Organisation page router history issue
 -   Fixed Search Panel `Clear` button doesn't work
 -   Fixed bug where dataset ids where "undefined" in distribution URLs.
--   Corrected incorrect source-link-status aspect name in UI dataset request URL 
+-   Corrected incorrect source-link-status aspect name in UI dataset request URL
 -   Updated URL of City of Launceston connector.
 
 ## 0.0.43
